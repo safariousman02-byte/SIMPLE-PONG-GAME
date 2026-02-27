@@ -32,22 +32,24 @@ class Ball {
         Vector2 speed;
         float radius;
 
+        void Reset() {
+            position = { (float)GetScreenWidth()/2, (float)GetScreenHeight()/2};
+            speed = { 300, 300};
+        }
+
         Ball() {
             Reset();
             radius = 10;
         }
 
-        void Reset() {
-            position = { (float)GetScreenWidth()/2, (float)GetScreenHeight()/2};
-            speed = { 400, 400};
-        }
+
 
         void Update(float dt) {
 
             position.x += speed.x*dt;
             position.y += speed.y*dt;
 
-            if (position.y < 0 || position.y > GetScreenHeight()) speed.y += -1;
+            if (position.y <= 0 || position.y >= GetScreenHeight()-radius) speed.y *= -1;
         }
         void Draw() {
             DrawCircleV(position, radius, YELLOW);
@@ -58,7 +60,7 @@ class PongGame {
 
     public:
 
-        Paddle  leftplayer;
+        Paddle leftplayer;
         Paddle RightPlayer;
         Ball ball;
         int scoreleft = 0;
@@ -78,12 +80,12 @@ class PongGame {
 
             if ( CheckCollisionCircleRec(ball.position, ball.radius, leftplayer.rect) || CheckCollisionCircleRec(ball.position, ball.radius, RightPlayer.rect) ) ball.speed.x *= -1.1f;
 
-            if (ball.position.x < 0) {
+            if (ball.position.x <= 0) {
                 scoreright++;
                 ball.Reset();
             }
 
-            if (ball.position.x > GetScreenHeight()) {
+            if (ball.position.x >= GetScreenWidth()) {
                 scoreleft++;
                 ball.Reset();
             }
